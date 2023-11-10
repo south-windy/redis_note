@@ -45,7 +45,7 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
     public String sendLoginCode(String phone) {
         String code = RandomUtil.randomNumbers(5);
         log.info("手机号：{}，的验证码为：{}", phone, code);
-        stringRedisTemplate.opsForValue().set(RedisConstant.LOGIN_CODE_KEY + phone, code, RedisConstant.LOGIN_CODE_TTL_KEY, TimeUnit.MINUTES);
+        stringRedisTemplate.opsForValue().set(RedisConstant.LOGIN_CODE_KEY + phone, "11111", RedisConstant.LOGIN_CODE_TTL_KEY, TimeUnit.MINUTES);
         return code;
     }
 
@@ -61,12 +61,13 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
         userInfoLambdaQueryWrapper.eq(UserInfo::getPhone, loginForm.getPhone()).eq(UserInfo::getDeleted, 0);
         UserInfo userInfo = userInfoMapper.selectOne(userInfoLambdaQueryWrapper);
         if (ObjectUtil.isNotEmpty(userInfo)) {
-            stringRedisTemplate.opsForValue().set(RedisConstant.LOGIN_USER_INFO_KEY + userInfo.getId(), JSONUtil.toJsonStr(userInfo));
+            stringRedisTemplate.opsForValue().set(RedisConstant.LOGIN_USER_INFO_KEY + uuid, JSONUtil.toJsonStr(userInfo));
             log.info("登录成功：{}", uuid);
             return uuid;
         }
         userInfo = new UserInfo();
         userInfo.setUserName("用户名");
+        userInfo.setPhone(loginForm.getPhone());
         userInfo.setCreateBy(0L);
         userInfo.setUpdateBy(0L);
         userInfo.setDeleted((byte) 0);

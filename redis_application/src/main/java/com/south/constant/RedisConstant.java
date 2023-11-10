@@ -14,7 +14,7 @@ public class RedisConstant {
     /**
      * 登录验证码过期时间 单位：分
      */
-    public static final Long LOGIN_CODE_TTL_KEY = 5L;
+    public static final Long LOGIN_CODE_TTL_KEY = 600L;
 
     /**
      * 已登录用户信息缓存
