@@ -19,11 +19,11 @@ import javax.servlet.http.HttpServletResponse;
  * @name AuthInterceptor
  * @date 2023-07-05 16:52
  */
-public class AuthInterceptor implements HandlerInterceptor {
+public class RefreshTokenInterceptor implements HandlerInterceptor {
 
     private StringRedisTemplate stringRedisTemplate;
 
-    public AuthInterceptor(StringRedisTemplate stringRedisTemplate) {
+    public RefreshTokenInterceptor(StringRedisTemplate stringRedisTemplate) {
         this.stringRedisTemplate = stringRedisTemplate;
     }
 
