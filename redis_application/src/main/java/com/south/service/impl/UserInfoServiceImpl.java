@@ -1,28 +1,25 @@
 package com.south.service.impl;
 
-import cn.hutool.core.lang.UUID;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.south.dto.UserDto;
-import com.south.req.LoginForm;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.south.constant.RedisConstant;
+import com.south.dto.UserDto;
+import com.south.mapper.UserInfoMapper;
+import com.south.model.UserInfo;
+import com.south.req.LoginForm;
+import com.south.service.UserInfoService;
 import com.south.utils.AuthUserHolder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import java.util.concurrent.TimeUnit;
-
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.south.model.UserInfo;
-import com.south.mapper.UserInfoMapper;
-import com.south.service.UserInfoService;
-import org.springframework.util.ObjectUtils;
 
 /**
  * ${describe}
@@ -51,19 +48,20 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
 
     @Override
     public String login(LoginForm loginForm) {
+        //校验验证码
         String code = stringRedisTemplate.opsForValue().get(RedisConstant.LOGIN_CODE_KEY + loginForm.getPhone());
         if (ObjectUtils.isEmpty(code) || !code.equals(loginForm.getCode())) {
             log.error("验证码错误");
             return "验证码错误";
         }
-        String uuid = IdUtil.randomUUID();
+        String token = IdUtil.randomUUID();
         LambdaQueryWrapper<UserInfo> userInfoLambdaQueryWrapper = new LambdaQueryWrapper<>();
         userInfoLambdaQueryWrapper.eq(UserInfo::getPhone, loginForm.getPhone()).eq(UserInfo::getDeleted, 0);
         UserInfo userInfo = userInfoMapper.selectOne(userInfoLambdaQueryWrapper);
         if (ObjectUtil.isNotEmpty(userInfo)) {
-            stringRedisTemplate.opsForValue().set(RedisConstant.LOGIN_USER_INFO_KEY + uuid, JSONUtil.toJsonStr(userInfo));
-            log.info("登录成功：{}", uuid);
-            return uuid;
+            stringRedisTemplate.opsForValue().set(RedisConstant.LOGIN_USER_INFO_KEY + token, JSONUtil.toJsonStr(userInfo), RedisConstant.LOGIN_USER_INFO_TTL_KEY, TimeUnit.MINUTES);
+            log.info("登录成功：{}", token);
+            return token;
         }
         userInfo = new UserInfo();
         userInfo.setUserName("用户名");
@@ -76,9 +74,9 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
         userDto.setId(userInfo.getId());
         userDto.setUserName(userInfo.getUserName());
         userDto.setPhone(userInfo.getPhone());
-        stringRedisTemplate.opsForValue().set(RedisConstant.LOGIN_USER_INFO_KEY + userDto.getId(), JSONUtil.toJsonStr(userDto), RedisConstant.LOGIN_USER_INFO_TTL_KEY, TimeUnit.MINUTES);
+        stringRedisTemplate.opsForValue().set(RedisConstant.LOGIN_USER_INFO_KEY + token, JSONUtil.toJsonStr(userDto), RedisConstant.LOGIN_USER_INFO_TTL_KEY, TimeUnit.MINUTES);
         log.info("注册成功：{}", insert);
-        return uuid;
+        return token;
     }
 
     @Override

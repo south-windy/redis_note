@@ -22,6 +22,6 @@ public class TestController {
     @GetMapping("/getUser")
     public String loginOut() {
         UserDto userDto = AuthUserHolder.get();
-        return userDto.getUserName();
+        return userDto.getPhone();
     }
 }

@@ -11,9 +11,12 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.concurrent.TimeUnit;
 
 /**
- * 用户信息拦截器
+ * 拦截所有请求
+ * 有token则刷新token并获取用户信息放置到threadLocal
+ * 没有则放行
  *
  * @author 南风
  * @name AuthInterceptor
@@ -30,11 +33,17 @@ public class RefreshTokenInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         String auth_application = request.getHeader("auth_application");
-        UserDto userDto = JSONUtil.toBean(stringRedisTemplate.opsForValue().get(RedisConstant.LOGIN_USER_INFO_KEY + auth_application), UserDto.class);
-        if (ObjectUtil.isEmpty(userDto)){
-            return false;
+        if (ObjectUtil.isEmpty(auth_application)) {
+            return true;
         }
+        String userDtoStr = stringRedisTemplate.opsForValue().get(RedisConstant.LOGIN_USER_INFO_KEY + auth_application);
+        if (ObjectUtil.isEmpty(userDtoStr)) {
+            return true;
+        }
+        UserDto userDto = JSONUtil.toBean(userDtoStr, UserDto.class);
         AuthUserHolder.set(userDto);
+        //刷新过期时间
+        stringRedisTemplate.expire(RedisConstant.LOGIN_USER_INFO_KEY + auth_application, RedisConstant.LOGIN_USER_INFO_TTL_KEY, TimeUnit.MINUTES);
         return true;
     }
 

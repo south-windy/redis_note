@@ -19,6 +19,7 @@ public class AuthWebConfig implements WebMvcConfigurer {
 
     @Resource
     private StringRedisTemplate stringRedisTemplate;
+
     /**
      * 配置拦截器
      *
@@ -26,14 +27,12 @@ public class AuthWebConfig implements WebMvcConfigurer {
      */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(new RefreshTokenInterceptor(stringRedisTemplate));
         //添加拦截器
-        registry.addInterceptor(new AuthInterceptor(stringRedisTemplate))
+        registry.addInterceptor(new LoginInterceptor())
                 //配置拦截路径 addPathPatterns("/**")表示拦截所有请求，包括我们的静态资源
-                .addPathPatterns("/**")
-                //如果有静态资源的时候可以在这个地方放行
-                .excludePathPatterns(
-                        "/",
-                        "/app/user/code",
-                        "/app/user/login");
+                .excludePathPatterns("/", "/error", "/app/user/sendLoginCode", "/app/user/login").addPathPatterns("/**")
+        //如果有静态资源的时候可以在这个地方放行
+        ;
     }
 }

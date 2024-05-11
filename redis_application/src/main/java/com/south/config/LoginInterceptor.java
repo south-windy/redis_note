@@ -1,8 +1,6 @@
 package com.south.config;
 
 import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.json.JSONUtil;
-import com.south.constant.RedisConstant;
 import com.south.dto.UserDto;
 import com.south.utils.AuthUserHolder;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -19,22 +17,15 @@ import javax.servlet.http.HttpServletResponse;
  * @name AuthInterceptor
  * @date 2023-07-05 16:52
  */
-public class AuthInterceptor implements HandlerInterceptor {
-
-    private StringRedisTemplate stringRedisTemplate;
-
-    public AuthInterceptor(StringRedisTemplate stringRedisTemplate) {
-        this.stringRedisTemplate = stringRedisTemplate;
-    }
+public class LoginInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        String auth_application = request.getHeader("auth_application");
-        UserDto userDto = JSONUtil.toBean(stringRedisTemplate.opsForValue().get(RedisConstant.LOGIN_USER_INFO_KEY + auth_application), UserDto.class);
-        if (ObjectUtil.isEmpty(userDto)){
+        UserDto userDto = AuthUserHolder.get();
+        if (ObjectUtil.isEmpty(userDto)) {
+            response.setStatus(401);
             return false;
         }
-        AuthUserHolder.set(userDto);
         return true;
     }
 
