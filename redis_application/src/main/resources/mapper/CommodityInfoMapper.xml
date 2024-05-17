@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.south.mapper.CommodityInfoMapper">
+    <resultMap id="BaseResultMap" type="com.south.model.CommodityInfo">
+        <!--@mbg.generated-->
+        <!--@Table t_commodity_info-->
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="commodity_name" jdbcType="VARCHAR" property="commodityName"/>
+        <result column="commodity_image" jdbcType="VARCHAR" property="commodityImage"/>
+        <result column="commodity_price" jdbcType="BIGINT" property="commodityPrice"/>
+        <result column="commodity_sku_code" jdbcType="VARCHAR" property="commoditySkuCode"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        <!--@mbg.generated-->
+        id, commodity_name, commodity_image, commodity_price, commodity_sku_code
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        <!--@mbg.generated-->
+        select
+        <include refid="Base_Column_List"/>
+        from t_commodity_info
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        <!--@mbg.generated-->
+        delete
+        from t_commodity_info
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.south.model.CommodityInfo"
+            useGeneratedKeys="true">
+        <!--@mbg.generated-->
+        insert into t_commodity_info (commodity_name, commodity_image, commodity_price,
+                                      commodity_sku_code)
+        values (#{commodityName,jdbcType=VARCHAR}, #{commodityImage,jdbcType=VARCHAR},
+                #{commodityPrice,jdbcType=BIGINT},
+                #{commoditySkuCode,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.south.model.CommodityInfo"
+            useGeneratedKeys="true">
+        <!--@mbg.generated-->
+        insert into t_commodity_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="commodityName != null">
+                commodity_name,
+            </if>
+            <if test="commodityImage != null">
+                commodity_image,
+            </if>
+            <if test="commodityPrice != null">
+                commodity_price,
+            </if>
+            <if test="commoditySkuCode != null">
+                commodity_sku_code,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="commodityName != null">
+                #{commodityName,jdbcType=VARCHAR},
+            </if>
+            <if test="commodityImage != null">
+                #{commodityImage,jdbcType=VARCHAR},
+            </if>
+            <if test="commodityPrice != null">
+                #{commodityPrice,jdbcType=BIGINT},
+            </if>
+            <if test="commoditySkuCode != null">
+                #{commoditySkuCode,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.south.model.CommodityInfo">
+        <!--@mbg.generated-->
+        update t_commodity_info
+        <set>
+            <if test="commodityName != null">
+                commodity_name = #{commodityName,jdbcType=VARCHAR},
+            </if>
+            <if test="commodityImage != null">
+                commodity_image = #{commodityImage,jdbcType=VARCHAR},
+            </if>
+            <if test="commodityPrice != null">
+                commodity_price = #{commodityPrice,jdbcType=BIGINT},
+            </if>
+            <if test="commoditySkuCode != null">
+                commodity_sku_code = #{commoditySkuCode,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.south.model.CommodityInfo">
+        <!--@mbg.generated-->
+        update t_commodity_info
+        set commodity_name     = #{commodityName,jdbcType=VARCHAR},
+            commodity_image    = #{commodityImage,jdbcType=VARCHAR},
+            commodity_price    = #{commodityPrice,jdbcType=BIGINT},
+            commodity_sku_code = #{commoditySkuCode,jdbcType=VARCHAR}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+</mapper>

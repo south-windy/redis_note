@@ -25,4 +25,11 @@ public class RedisConstant {
      * 已登录用户信息缓存时间
      */
     public static final Long LOGIN_USER_INFO_TTL_KEY = 30L;
+
+    /**
+     * 商品信息缓存key
+     */
+    public static final String COMMODITY_INFO_KEY = "select:cache:commodity:";
+
+    public static final Long COMMODITY_INFO_KEY_TTL_KEY = 30L;
 }
