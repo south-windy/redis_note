@@ -32,4 +32,9 @@ public class RedisConstant {
     public static final String COMMODITY_INFO_KEY = "select:cache:commodity:";
 
     public static final Long COMMODITY_INFO_KEY_TTL_KEY = 30L;
+
+    /**
+     * 重建商品信息缓存锁
+     */
+    public static final String COMMODITY_INFO_LOCK_KEY = "select:cache:lock:commodity:";
 }
