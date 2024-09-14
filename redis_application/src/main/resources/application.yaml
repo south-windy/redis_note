@@ -23,6 +23,9 @@ spring:
     default-property-inclusion: non_null
 mybatis-plus:
   type-aliases-package: com.south.model
+  # 配置打印日志
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
 logging:
   level:

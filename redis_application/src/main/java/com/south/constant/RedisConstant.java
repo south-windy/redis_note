@@ -31,10 +31,15 @@ public class RedisConstant {
      */
     public static final String COMMODITY_INFO_KEY = "select:cache:commodity:";
 
-    public static final Long COMMODITY_INFO_KEY_TTL_KEY = 30L;
+    public static final Long COMMODITY_INFO_KEY_MINUTES_TTL_KEY = 30L;
 
     /**
      * 重建商品信息缓存锁
      */
     public static final String COMMODITY_INFO_LOCK_KEY = "select:cache:lock:commodity:";
+
+    /**
+     * 重建商品缓存锁自动释放时间
+     */
+    public static final Long COMMODITY_INFO_LOCK_KEY_TTL = 10L;
 }

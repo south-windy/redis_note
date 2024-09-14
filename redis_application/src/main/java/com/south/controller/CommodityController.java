@@ -29,5 +29,4 @@ public class CommodityController {
     public CommodityInfo getCommodityInfo(@RequestParam("id") Long id) {
         return commodityService.getCommodityInfo(id);
     }
-
 }
