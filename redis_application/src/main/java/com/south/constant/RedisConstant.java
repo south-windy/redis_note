@@ -42,4 +42,9 @@ public class RedisConstant {
      * 重建商品缓存锁自动释放时间
      */
     public static final Long COMMODITY_INFO_LOCK_KEY_TTL = 10L;
+
+    /**
+     * 缓存空值过期时间
+     */
+    public static final Long NULL_DATA_TTL = 60L;
 }
